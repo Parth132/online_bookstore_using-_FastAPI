@@ -25,6 +25,11 @@ class RatingsBase(BaseModel):
 async def add_new_rating(review: RatingsBase, db: db_dependency):
     if not(1 <= review.rating <= 5):
         raise HTTPException(status_code=400, detail='Invalid Rating')
+    result = db.query(models.Ratings.user_name).all()
+    for user in result:
+        print(user)
+        if review.user_name == user[0]:
+            raise HTTPException(status_code=400, detail='User already submitted rating')
     try:
         db_rating = models.Ratings(book_id = review.book_id, user_name = review.user_name, 
             rating = review.rating, review_text = review.review_text)

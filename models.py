@@ -8,7 +8,7 @@ class Books(Base):
 	title = Column(String, index = True)
 	author = Column(String, index = True)
 	published_date = Column(Date, index = True)
-	ISBN_number = Column(Integer, index = True)
+	ISBN_number = Column(String(13), index = True)
 	price = Column(Integer, index = True)
 
 	rating = relationship("Ratings", back_populates='book')

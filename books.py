@@ -22,7 +22,7 @@ class BooksBase(BaseModel):
     title: str
     author: str
     published_date: datetime
-    ISBN_number: int
+    ISBN_number: str
     price: int
 
 @router.get("/books")
@@ -67,6 +67,7 @@ async def update_book_details(book_id: int, book: BooksBase, db: db_dependency):
     result.price = book.price
     db.commit()
     db.refresh(result)
+    return {'message':'details updated successfully'}
 
 @router.delete("/books/{id}")
 async def delete_book(book_id: int, db: db_dependency):
@@ -75,6 +76,7 @@ async def delete_book(book_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail='Book not found')
     db.delete(result)
     db.commit()
+    return {'message':'book deleted successfully'}
 
 @router.post("/books")
 async def add_books(book: BooksBase, db: db_dependency):
@@ -83,3 +85,4 @@ async def add_books(book: BooksBase, db: db_dependency):
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
+    return {'message':'book added successfully'}
