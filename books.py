@@ -55,6 +55,27 @@ async def get_book_by_id(book_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail='Book is not found!')
     return result
 
+@router.put("/books/{id}")
+async def update_book_details(book_id: int, book: BooksBase, db: db_dependency):
+    result = db.query(models.Books).filter(models.Books.id == book_id).first()
+    if not result:
+        raise HTTPException(status_code=404, detail='Book not found')
+    result.title = book.title
+    result.author = book.author
+    result.published_date = book.published_date
+    result.ISBN_number = book.ISBN_number
+    result.price = book.price
+    db.commit()
+    db.refresh(result)
+
+@router.delete("/books/{id}")
+async def delete_book(book_id: int, db: db_dependency):
+    result = db.query(models.Books).filter(models.Books.id == book_id).first()
+    if not result:
+        raise HTTPException(status_code=404, detail='Book not found')
+    db.delete(result)
+    db.commit()
+
 @router.post("/books")
 async def add_books(book: BooksBase, db: db_dependency):
     db_book = models.Books(title = book.title, author = book.author, 

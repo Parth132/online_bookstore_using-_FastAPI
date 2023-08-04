@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date
 from database import Base
+from sqlalchemy.orm import relationship
 
 class Books(Base):
 	__tablename__ = "books"
@@ -10,6 +11,8 @@ class Books(Base):
 	ISBN_number = Column(Integer, index = True)
 	price = Column(Integer, index = True)
 
+	rating = relationship("Ratings", back_populates='book')
+
 class Ratings(Base):
 	__tablename__ = "ratings"
 	id = Column(Integer, primary_key = True, index = True)
@@ -17,3 +20,5 @@ class Ratings(Base):
 	user_name = Column(String, index = True)
 	rating = Column(Integer, index = True)
 	review_text = Column(String, index = True)
+
+	book = relationship('Books', back_populates = 'rating')
